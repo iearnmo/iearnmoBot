@@ -3,7 +3,7 @@ const getJSON = require('get-json')
 const https = require('https');
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
-import { initializeApp } from 'firebase/app';
+const firebase = require('firebase')
 
 // TODO: Replace the following with your app's Firebase project configuration
 const firebaseConfig = {
