@@ -15,8 +15,8 @@ jobs:
           node-version: 16
       - run: npm install
       - run: npm install get-json --save
-      - run: npm install jsdom --save
-      - run: npm install firebase --save
+      - run: npm install express --save
+      - run: npm install fb-messenger-bot-api --save
       - run: node bot.js
 
   
