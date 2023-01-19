@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const facebook = require('fb-messenger-bot-api');
-const messagingClient = new facebook.FacebookMessagingAPIClient(process.env.PAGE_ACCESS_TOKEN);
+const messagingClient = new facebook.FacebookMessagingAPIClient('EAAZA1F3dtHAkBAEdf2T4dBC6tHN3GZBAT9QNmqjXiz8ZBXlWB4cnLHbnSVCHpfJgP0ZBBjSiBdI4q5QLggQKDZAABFXeGSsqtZAJhfHsH4Ei1CJwWXu6dOrm7GcPngEw4ifRRsoZBZCjWeXDvbgyMloa3RsopxZCT7qZBjxmbBb3oTCKrsQyLjgUVHeVJlefBCtzQZD');
 const messageParser = facebook.FacebookMessageParser;
 ...
 router.get('/api/webhook',facebook.ValidateWebhook.validateServer);
