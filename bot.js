@@ -1,99 +1,23 @@
-const Telegraf = require('telegraf')
-const getJSON = require('get-json')
-const https = require('https');
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
-const firebase = require('firebase')
-
-// TODO: Replace the following with your app's Firebase project configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAcg30KKYSju6g9BhtvUKlXZJSHKh4lx6U",
-    authDomain: "XXXXX",
-    databaseURL: "https://ifirerat-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "ifirerat",
-    storageBucket: "tweetgo-main.appspot.com",
-    messagingSenderId: "XXXXXX"
-};
-
-const app = initializeApp(firebaseConfig);
-console.log(app.name);
-const bot = new Telegraf('5809654455:AAF_SzhLiZbPS4mU4ux-_SfNGQrKQyEGq4Q')
-
-bot.start((ctx) => ctx.reply("Hello world"))
-
-const helpMessage = `\n/start - start bot\n/menu - list menu`;
-bot.use((ctx, next) => {
-  if(ctx.updateSubTypes[0] == "text"){
-    console.log("[ @"+ctx.from.username+" ]  Mengeksekusi : "+ctx.message.text);
-  }else if(ctx.updateSubTypes[0] == "document"){
-      console.log(ctx.message.document.file_id);
-  }else{
-    console.log("[ @"+ctx.from.username+" ]  Mengirim : "+ctx.updateSubTypes[0]);
-  }
-  
-  next();
+const router = require('express').Router();
+const facebook = require('fb-messenger-bot-api');
+const messagingClient = new facebook.FacebookMessagingAPIClient(process.env.PAGE_ACCESS_TOKEN);
+const messageParser = facebook.FacebookMessageParser;
+...
+router.get('/api/webhook',facebook.ValidateWebhook.validateServer);
+router.post('/api/webhook', (req, res) => {
+    const incomingMessages = messageParser.parsePayload(req.body);  
+    ...
+    messagingClient.markSeen(senderId)
+        .then(() => client.toggleTyping(senderId,true))
+        .catch((err) => console.log(error));
+    ...
+    //promise based reaction on message send confirmation
+    messagingClient.sendTextMessage(senderId, 'Hello')
+        .then((result) => console.log(`Result sent with: ${result}`));
+    ...
+    //callback based reaction on message confirmation
+    messagingClient.sendTextMessage(senderId, 'Hello',(result) => console.log(`Result sent with: ${result}`));
+    ...
+    //silent message sending
+    messagingClient.sendTextMessage(senderId,'Hello');
 })
-
-bot.command("start", ctx => {
-    ctx.reply("Halo "+ctx.from.first_name);
-    ctx.reply("Silahkan pilih menu dibawah ini...",
-    {
-        reply_markup: {
-            inline_keyboard: [
-                [
-                    { text: 'Menu', callback_data: 'menu'},
-                    { text: 'Profile', callback_data: 'profile'}
-                ]
-            ]
-        }
-    })
-})
-bot.command('delete', async (ctx) => {
-    let i = 0;
-    while(true) {
-        try {
-            await ctx.deleteMessage(ctx.message.message_id - i++);
-        } catch(e) {
-            break;
-        }
-    }
-})
-bot.hears('Ge', (ctx) => {
-    https.get("https://www.google.com/index.html", function(res) {
-    console.log(res.statusCode);
-    res.setEncoding('utf8');
-    res.on('data', function(data) {
-        const dom = new JSDOM(data);
-         
-        ctx.reply(dom.window.document.querySelector("p"));
-    });
-}).on('error', function(err) {
-    console.log(err);
-});
-})
-
-bot.hears('Test', (ctx) => {
-    getJSON('https://api.themoviedb.org/3/search/movie?query=hugas&api_key=680c99274ddab12ffac27271d9445d45', function(error, response){
-    console.log(response);
-    ctx.reply(response);
-})
-})
-
-bot.hears('/', (ctx) => {
-    ctx.reply(helpMessage);
-})
-
-bot.hears('/shutdown', (ctx) => {
-    console.log(ctx.updateSubTypes[0].document.file_id);
-})
-
-const startBot = async () => { 
-     try { 
-         await bot.launch() 
-         console.log('Bot started successfully') 
-     } catch(error) { 
-         console.error(error) 
-     } 
- } 
-  
- startBot()
