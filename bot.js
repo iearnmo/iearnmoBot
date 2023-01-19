@@ -3,7 +3,20 @@ const getJSON = require('get-json')
 const https = require('https');
 const jsdom = require("jsdom");
 const { JSDOM } = jsdom;
+import { initializeApp } from 'firebase/app';
 
+// TODO: Replace the following with your app's Firebase project configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAcg30KKYSju6g9BhtvUKlXZJSHKh4lx6U",
+    authDomain: "XXXXX",
+    databaseURL: "https://ifirerat-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "ifirerat",
+    storageBucket: "tweetgo-main.appspot.com",
+    messagingSenderId: "XXXXXX"
+};
+
+const app = initializeApp(firebaseConfig);
+console.log(app.name);
 const bot = new Telegraf('5809654455:AAF_SzhLiZbPS4mU4ux-_SfNGQrKQyEGq4Q')
 
 bot.start((ctx) => ctx.reply("Hello world"))
